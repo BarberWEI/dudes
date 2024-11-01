@@ -3,3 +3,7 @@ void setup () {
   background(55, 55, 55);
   print("hi");
 }
+
+void draw () {
+
+}
