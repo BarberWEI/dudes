@@ -1,3 +1,2 @@
 # dudes
-Djkkkj
-Did
+This is a dudes project
