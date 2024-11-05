@@ -4,6 +4,7 @@ public class dude {
   float x, y;
   float xSpeed, ySpeed;
   float radius;
+  float totalSpeed;
   
   public dude (float x, float y, float xSpeed, float ySpeed, float radius, boolean attractedToDudes, boolean scaredOfDudes) {
     this.x = x;
@@ -13,6 +14,7 @@ public class dude {
     this.radius = radius;
     this.attractedToDudes = attractedToDudes;
     this.scaredOfDudes = scaredOfDudes;
+    this.totalSpeed = sqrt(sq(xSpeed) + sq(ySpeed));
   }
   
   public dude () {
@@ -23,23 +25,43 @@ public class dude {
     this.radius = 25;
     this.attractedToDudes = false;
     this.scaredOfDudes = false;
+    this.totalSpeed = sqrt(sq(xSpeed) + sq(ySpeed));
   }
   
-  void update () {
-    
-    x += xSpeed;
-    y += ySpeed;
-    
+  //targetX and targetY are the x and y coords of another target dude
+  void update (float targetX, float targetY) {
+    if (scaredOfDudes) {
+      updateScared(targetX, targetY);
+    }else if (attractedToDudes) {
+      updateLove(targetX, targetY);
+    }else {
+      updateNutral();
+    }
     if (x > width - radius || x < radius ) {
-      xSpeed = -xSpeed;
+        xSpeed = -xSpeed;
     }
     if (y > height - radius || y < radius ) {
-      ySpeed = -ySpeed;
+        ySpeed = -ySpeed;
     }
   }
   
-  //updates the speed if this dude is scared of other dudes
-  void updateScared () {
+  //updates the speed if this dude holds nutral feelings towards other dudes
+  
+  void updateNutral () {
+    x += xSpeed;
+    y += ySpeed;
+      
+  }
+  //updates the speed if this dude is scared of other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is scared of 
+  void updateScared (float targetX, float targetY) {
+      float deltaX = targetX - x;
+      float deltaY = targetY - y;
+      float angle = atan2(deltaX, deltaY);
+      
+  }
+  
+  //updates the speed if this dude is in love with other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is in love with
+  void updateLove (float targetX, float targetY) {
     
   }
   
