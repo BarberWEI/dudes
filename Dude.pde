@@ -52,6 +52,11 @@ public class dude {
         ySpeed = 0;
       }else if (radius > targetRadius) {
         radius += targetRadius;
+      }else {
+        x = random(5000, 50000);
+        y = random(5000, 50000);
+        xSpeed = 0;
+        ySpeed = 0;
       }
     }
     //the extra aditions and subtraction is the prevent the ball from being stuck on the wall
