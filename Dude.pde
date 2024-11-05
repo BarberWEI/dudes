@@ -30,13 +30,18 @@ public class dude {
   
   //targetX and targetY are the x and y coords of another target dude
   void update (float targetX, float targetY) {
+    float distance = sqrt(sq(x - targetX) + sq(y - targetY));
+    
     x += xSpeed;
     y += ySpeed; 
     
-    if (scaredOfDudes) {
-      updateScared(targetX, targetY);
-    }else if (attractedToDudes) {
-      updateLove(targetX, targetY);
+    // only runs towards or away when distance is smaller than a certain number
+    if (distance < 100) {
+      if (scaredOfDudes) {
+        updateScared(targetX, targetY);
+      }else if (attractedToDudes) {
+        updateLove(targetX, targetY);
+      }
     }
     if (x > width - radius || x < radius ) {
         xSpeed = -xSpeed;
