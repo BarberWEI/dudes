@@ -36,17 +36,32 @@ public class dude {
     y += ySpeed; 
     
     // only runs towards or away when distance is smaller than a certain number
-    if (distance < 100) {
+    if (distance < 150) {
       if (scaredOfDudes) {
         updateScared(targetX, targetY);
       }else if (attractedToDudes) {
         updateLove(targetX, targetY);
       }
     }
-    if (x > width - radius || x < radius ) {
+    
+    //the extra aditions and subtraction is the prevent the ball from being stuck on the wall
+    if (x >= width - (radius + xSpeed) || x <= radius - xSpeed ) {
         xSpeed = -xSpeed;
     }
-    if (y > height - radius || y < radius ) {
+    if (y >= height - (radius + ySpeed) || y <= radius - ySpeed) {
+        ySpeed = -ySpeed;
+    }
+  }
+  
+  //for casuale dudes
+  void update () {    
+    x += xSpeed;
+    y += ySpeed; 
+    
+    if (x >= width - (radius + xSpeed) || x <= radius - xSpeed ) {
+        xSpeed = -xSpeed;
+    }
+    if (y >= height - (radius + ySpeed) || y <= radius - ySpeed) {
         ySpeed = -ySpeed;
     }
   }
