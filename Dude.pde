@@ -30,12 +30,13 @@ public class dude {
   
   //targetX and targetY are the x and y coords of another target dude
   void update (float targetX, float targetY) {
+    x += xSpeed;
+    y += ySpeed; 
+    
     if (scaredOfDudes) {
       updateScared(targetX, targetY);
     }else if (attractedToDudes) {
       updateLove(targetX, targetY);
-    }else {
-      updateNutral();
     }
     if (x > width - radius || x < radius ) {
         xSpeed = -xSpeed;
@@ -45,24 +46,22 @@ public class dude {
     }
   }
   
-  //updates the speed if this dude holds nutral feelings towards other dudes
-  
-  void updateNutral () {
-    x += xSpeed;
-    y += ySpeed;
-      
-  }
   //updates the speed if this dude is scared of other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is scared of 
   void updateScared (float targetX, float targetY) {
-      float deltaX = targetX - x;
-      float deltaY = targetY - y;
-      float angle = atan2(deltaX, deltaY);
-      
+    float deltaX = targetX - x;
+    float deltaY = targetY - y;
+    float angle = atan2(deltaY, deltaX);
+    xSpeed = -(cos(angle) * totalSpeed);
+    ySpeed = -(sin(angle) * totalSpeed);
   }
   
   //updates the speed if this dude is in love with other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is in love with
   void updateLove (float targetX, float targetY) {
-    
+    float deltaX = targetX - x;
+    float deltaY = targetY - y;
+    float angle = atan2(deltaY, deltaX);
+    xSpeed = cos(angle) * totalSpeed;
+    ySpeed = sin(angle) * totalSpeed;
   }
   
   //returns the x and y location of the dude
