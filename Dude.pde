@@ -28,8 +28,8 @@ public class dude {
     this.totalSpeed = sqrt(sq(xSpeed) + sq(ySpeed));
   }
   
-  //targetX and targetY are the x and y coords of another target dude
-  void update (float targetX, float targetY) {
+  //targetX and targetY are the x and y coords of another target dude. also gets the radius of the chosen dude so we can tell which one is bigger
+  void update (float targetX, float targetY, float targetRadius) {
     float distance = sqrt(sq(x - targetX) + sq(y - targetY));
     
     x += xSpeed;
@@ -44,6 +44,16 @@ public class dude {
       }
     }
     
+    if (distance < 50) {
+      if (radius < targetRadius) {
+        x= 5000;
+        y = 5000;
+        xSpeed = 0;
+        ySpeed = 0;
+      }else if (radius > targetRadius) {
+        radius += targetRadius;
+      }
+    }
     //the extra aditions and subtraction is the prevent the ball from being stuck on the wall
     if (x >= width - (radius + xSpeed) || x <= radius - xSpeed ) {
         xSpeed = -xSpeed;
@@ -71,8 +81,8 @@ public class dude {
     float deltaX = targetX - x;
     float deltaY = targetY - y;
     float angle = atan2(deltaY, deltaX);
-    xSpeed = -(cos(angle) * totalSpeed);
-    ySpeed = -(sin(angle) * totalSpeed);
+    xSpeed += -(0.05 * cos(angle) * totalSpeed);
+    ySpeed += -(0.05 *sin(angle) * totalSpeed);
   }
   
   //updates the speed if this dude is in love with other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is in love with
@@ -80,18 +90,18 @@ public class dude {
     float deltaX = targetX - x;
     float deltaY = targetY - y;
     float angle = atan2(deltaY, deltaX);
-    xSpeed = cos(angle) * totalSpeed;
-    ySpeed = sin(angle) * totalSpeed;
+    xSpeed += 0.05 * cos(angle) * totalSpeed;
+    ySpeed += 0.05 * sin(angle) * totalSpeed;
   }
   
-  //returns the x and y location of the dude
-  ArrayList<Float> returnLocation () {
-    ArrayList<Float> location = new ArrayList<Float>();
+  //returns the x and y location of the dude as well as the radius.
+  ArrayList<Float> returnInformation () {
+    ArrayList<Float> information = new ArrayList<Float>();
     
-    location.add(x);
-    location.add(y);
-    
-    return location;
+    information.add(x);
+    information.add(y);
+    information.add(radius);
+    return information;
   }
   
   void drawDude () {
