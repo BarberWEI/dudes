@@ -36,7 +36,7 @@ public class dude {
     y += ySpeed; 
     
     // only runs towards or away when distance is smaller than a certain number
-    if (distance < 150) {
+    if (distance < 200) {
       if (scaredOfDudes) {
         updateScared(targetX, targetY);
       }else if (attractedToDudes) {
@@ -44,10 +44,10 @@ public class dude {
       }
     }
     
-    if (distance < 50) {
+    if (distance < 30) {
       if (radius < targetRadius) {
-        x= 5000;
-        y = 5000;
+        x = random(5000, 50000);
+        y = random(5000, 50000);
         xSpeed = 0;
         ySpeed = 0;
       }else if (radius > targetRadius) {
@@ -55,19 +55,6 @@ public class dude {
       }
     }
     //the extra aditions and subtraction is the prevent the ball from being stuck on the wall
-    if (x >= width - (radius + xSpeed) || x <= radius - xSpeed ) {
-        xSpeed = -xSpeed;
-    }
-    if (y >= height - (radius + ySpeed) || y <= radius - ySpeed) {
-        ySpeed = -ySpeed;
-    }
-  }
-  
-  //for casuale dudes
-  void update () {    
-    x += xSpeed;
-    y += ySpeed; 
-    
     if (x >= width - (radius + xSpeed) || x <= radius - xSpeed ) {
         xSpeed = -xSpeed;
     }
@@ -95,12 +82,12 @@ public class dude {
   }
   
   //returns the x and y location of the dude as well as the radius.
-  ArrayList<Float> returnInformation () {
-    ArrayList<Float> information = new ArrayList<Float>();
+  float[] returnInformation () {
+    float[] information = new float[3];
     
-    information.add(x);
-    information.add(y);
-    information.add(radius);
+    information[0] = x;
+    information[1] = y;
+    information[2] = radius;
     return information;
   }
   
