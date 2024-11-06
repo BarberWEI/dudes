@@ -1,4 +1,4 @@
-dude[] dudes = new dude[4];
+dude[] dudes = new dude[10];
 
 void setup() {
   size(700, 700);
@@ -6,14 +6,28 @@ void setup() {
   
   //Initialize the dudes randomly
   
-  dudes[0] = new dude(350, 400, 1, 0.8, 26, false, false);
-  dudes[1] = new dude(40, 60, 2, 0.5, 25, false, true);
-  dudes[2] = new dude(500, 200, 1, 0.8, 26, true, false);
-  dudes[3] = new dude(90, 100, 2, 0.5, 25, false, true);
+  // Initialize each dude with random values
+  for (int i = 0; i < dudes.length; i++) {
+    float x = random(30, width - 30);                 
+    float y = random(30, height - 30);
+    float xSpeed = random(-.05, .05);            
+    float ySpeed = random(-.05, .05);
+    float radius = random(10, 35); 
+    boolean attractedToDudes = random(1) > 0.5; 
+    boolean scaredOfDudes;
+    if (!attractedToDudes) {
+      scaredOfDudes = random(1) > 0.5; 
+    }else {
+      scaredOfDudes = false; 
+    }
+    
+    dudes[i] = new dude(x, y, xSpeed, ySpeed, radius, attractedToDudes, scaredOfDudes);
+  }
 }
 
 void draw() {
   background(55, 55, 55);
+  sortDudesByRadius();
   
   //Update and draw each dude
   for (int i = 0; i < dudes.length; i++) {
@@ -24,5 +38,18 @@ void draw() {
       }
     }
     dudes[i].drawDude();
+  }
+}
+
+void sortDudesByRadius() {
+  for (int i = 0; i < dudes.length - 1; i++) {
+    for (int j = 0; j < dudes.length - i - 1; j++) {
+      if (dudes[j].radius > dudes[j + 1].radius) {
+        // Swap dudes[j] and dudes[j + 1]
+        dude temp = dudes[j];
+        dudes[j] = dudes[j + 1];
+        dudes[j + 1] = temp;
+      }
+    }
   }
 }

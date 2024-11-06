@@ -5,6 +5,7 @@ public class dude {
   float xSpeed, ySpeed;
   float radius;
   float totalSpeed;
+  final float maxRadius = 200;
   
   public dude (float x, float y, float xSpeed, float ySpeed, float radius, boolean attractedToDudes, boolean scaredOfDudes) {
     this.x = x;
@@ -32,9 +33,6 @@ public class dude {
   void update (float targetX, float targetY, float targetRadius) {
     float distance = sqrt(sq(x - targetX) + sq(y - targetY));
     
-    x += xSpeed;
-    y += ySpeed; 
-    
     // only runs towards or away when distance is smaller than a certain number
     if (distance < 200) {
       if (scaredOfDudes) {
@@ -43,22 +41,19 @@ public class dude {
         updateLove(targetX, targetY);
       }
     }
-    
-    if (distance < 30) {
-      if (radius < targetRadius) {
-        x = random(5000, 50000);
-        y = random(5000, 50000);
-        xSpeed = 0;
-        ySpeed = 0;
-      }else if (radius > targetRadius) {
-        radius += targetRadius;
-      }else {
-        x = random(5000, 50000);
-        y = random(5000, 50000);
-        xSpeed = 0;
-        ySpeed = 0;
-      }
+
+    if (distance <  targetRadius && radius < targetRadius) {
+      x = random(5000, 50000);
+      y = random(5000, 50000);
+      xSpeed = 0;
+      ySpeed = 0;
+      print("i got eaten");
+      
+    }else if (distance <  radius && radius >= targetRadius) {
+      radius += targetRadius; 
+      print("i ate someone");
     }
+    
     //the extra aditions and subtraction is the prevent the ball from being stuck on the wall
     if (x >= width - (radius + xSpeed) || x <= radius - xSpeed ) {
         xSpeed = -xSpeed;
@@ -66,8 +61,11 @@ public class dude {
     if (y >= height - (radius + ySpeed) || y <= radius - ySpeed) {
         ySpeed = -ySpeed;
     }
+    
+    x += xSpeed;
+    y += ySpeed; 
   }
-  
+
   //updates the speed if this dude is scared of other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is scared of 
   void updateScared (float targetX, float targetY) {
     float deltaX = targetX - x;
