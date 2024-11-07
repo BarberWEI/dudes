@@ -1,7 +1,7 @@
-dude[] dudes = new dude[60];
+dude[] dudes = new dude[50];
 
 void setup() {
-  size(1440, 850);
+  fullScreen();
   background(55, 55, 55);
   
   // Initialize each dude with random values
@@ -10,14 +10,18 @@ void setup() {
     float y = random(20, height - 20);
     float xSpeed = random(-.0005, .0005);            
     float ySpeed = random(-.0005, .0005);
+    //float xSpeed = random(-.5, .5);            
+    //float ySpeed = random(-.5, .5);
     boolean attractedToDudes = random(1) > 0.5;
     boolean scaredOfDudes = false;
     float radius;
+    
+    //gives scared dudes an advantage to begin with
     if (!attractedToDudes) {
       scaredOfDudes = true; 
-      radius = random(12.5, 20); 
-    }{
-      radius = random(5, 12.5); 
+      radius = random(20, 11); 
+    }else {
+      radius = random(5, 15); 
     }
     
     dudes[i] = new dude(x, y, xSpeed, ySpeed, radius, attractedToDudes, scaredOfDudes);
@@ -26,7 +30,7 @@ void setup() {
 
 void draw() {
   background(55, 55, 55);
-  sortDudesByRadius();
+  sortDudesByRadius();  
   
   //Update and draw each dude
   for (int i = 0; i < dudes.length; i++) {

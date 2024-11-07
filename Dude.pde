@@ -33,7 +33,7 @@ public class dude {
   void update (float targetX, float targetY, float targetRadius) {
     float distance = sqrt(sq(x - targetX) + sq(y - targetY));
     //checks to see if the ball is close enough to another ball to detect and move towards or away from it, set to 300
-    closeEnoughToDetect(distance, targetX, targetY);
+    closeEnoughToDetect(distance, targetX, targetY, targetRadius);
     //checks to see if this ball eats someone is is eaten by someone this frame
     checkEat(distance, targetRadius);
     updateBounceOffWall();
@@ -41,12 +41,12 @@ public class dude {
   }
   
   // only runs towards or away when distance is smaller than a certain number
-  void closeEnoughToDetect (float distance, float targetX, float targetY) {
+  void closeEnoughToDetect (float distance, float targetX, float targetY, float targetRadius) {
     if (distance < 200) {
       if (scaredOfDudes) {
-        updateScared(targetX, targetY);
+        updateScared(targetX, targetY, targetRadius);
       }else if (attractedToDudes) {
-        updateLove(targetX, targetY);
+        updateLove(targetX, targetY, targetRadius);
       }
     }
   }
@@ -60,7 +60,6 @@ public class dude {
     //radius plus 1 because sometimes the timing is broken without the +1 and a ball teleports away before the other one detects it
     }else if (distance <  radius + 5 && radius >= targetRadius) {
       radius += targetRadius; 
-      
       //prevents the ball from being stuck on the wall when it eats someone next to the wall
       checkStuckOnWallAfterEating(targetRadius);
     }
@@ -85,31 +84,33 @@ public class dude {
     }else if(x <= radius - xSpeed ) {
       x += targetRadius;
     }
-    
     if (y >= height - (radius + ySpeed)) {
       y -= targetRadius;
     }else if(y <= radius - ySpeed) {
       y += targetRadius;
     }
-   
   }
     
   //updates the speed if this dude is scared of other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is scared of 
-  void updateScared (float targetX, float targetY) {
+  void updateScared (float targetX, float targetY, float targetRadius) {
     float deltaX = targetX - x;
     float deltaY = targetY - y;
     float angle = atan2(deltaY, deltaX);
-    xSpeed -= (0.07 * cos(angle) * totalSpeed);
-    ySpeed -= (0.07 *sin(angle) * totalSpeed);
+    if (targetRadius > radius) {
+      xSpeed -= (0.09 * cos(angle) * totalSpeed);
+      ySpeed -= (0.09 *sin(angle) * totalSpeed);
+    }
   }
   
   //updates the speed if this dude is in love with other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is in love with
-  void updateLove (float targetX, float targetY) {
+  void updateLove (float targetX, float targetY, float targetRadius) {
     float deltaX = targetX - x;
     float deltaY = targetY - y;
     float angle = atan2(deltaY, deltaX);
-    xSpeed += 0.01 * cos(angle) * totalSpeed;
-    ySpeed += 0.01 * sin(angle) * totalSpeed;
+    if (targetRadius < radius) {
+      xSpeed += 0.01 * cos(angle) * totalSpeed;
+      ySpeed += 0.01 * sin(angle) * totalSpeed;
+    }
   }
   
   //returns the x and y location of the dude as well as the radius.
