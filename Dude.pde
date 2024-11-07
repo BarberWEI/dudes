@@ -32,8 +32,16 @@ public class dude {
   //targetX and targetY are the x and y coords of another target dude. also gets the radius of the chosen dude so we can tell which one is bigger
   void update (float targetX, float targetY, float targetRadius) {
     float distance = sqrt(sq(x - targetX) + sq(y - targetY));
+    //checks to see if the ball is close enough to another ball to detect and move towards or away from it, set to 300
+    closeEnoughToDetect(distance, targetX, targetY);
+    //checks to see if this ball eats someone is is eaten by someone this frame
+    checkEat(distance, targetRadius);
+    updateBounceOffWall();
     
-    // only runs towards or away when distance is smaller than a certain number
+  }
+  
+  // only runs towards or away when distance is smaller than a certain number
+  void closeEnoughToDetect (float distance, float targetX, float targetY) {
     if (distance < 200) {
       if (scaredOfDudes) {
         updateScared(targetX, targetY);
@@ -41,38 +49,58 @@ public class dude {
         updateLove(targetX, targetY);
       }
     }
-
+  }
+  //code for dudes eating other dudes and dudes being eaten by other dudes
+  void checkEat (float distance, float targetRadius) {
     if (distance <  targetRadius && radius < targetRadius) {
       x = random(5000, 50000);
       y = random(5000, 50000);
       xSpeed = 0;
       ySpeed = 0;
-      print("i got eaten");
-      
-    }else if (distance <  radius && radius >= targetRadius) {
+    //radius plus 1 because sometimes the timing is broken without the +1 and a ball teleports away before the other one detects it
+    }else if (distance <  radius + 5 && radius >= targetRadius) {
       radius += targetRadius; 
-      print("i ate someone");
+      
+      //prevents the ball from being stuck on the wall when it eats someone next to the wall
+      checkStuckOnWallAfterEating(targetRadius);
     }
-    
-    //the extra aditions and subtraction is the prevent the ball from being stuck on the wall
-    if (x >= width - (radius + xSpeed) || x <= radius - xSpeed ) {
+  }
+  
+  //the extra aditions and subtraction is the prevent the ball from being stuck on the wall
+  void updateBounceOffWall () {
+  if (x >= width - (radius + xSpeed) || x <= radius - xSpeed ) {
         xSpeed = -xSpeed;
     }
     if (y >= height - (radius + ySpeed) || y <= radius - ySpeed) {
         ySpeed = -ySpeed;
     }
-    
     x += xSpeed;
     y += ySpeed; 
   }
 
+  //prevents the ball from being stuck on the wall when it eats someone next to the wall
+  void checkStuckOnWallAfterEating (float targetRadius) {
+    if (x >= width - (radius + xSpeed)) {
+      x -= targetRadius;
+    }else if(x <= radius - xSpeed ) {
+      x += targetRadius;
+    }
+    
+    if (y >= height - (radius + ySpeed)) {
+      y -= targetRadius;
+    }else if(y <= radius - ySpeed) {
+      y += targetRadius;
+    }
+   
+  }
+    
   //updates the speed if this dude is scared of other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is scared of 
   void updateScared (float targetX, float targetY) {
     float deltaX = targetX - x;
     float deltaY = targetY - y;
     float angle = atan2(deltaY, deltaX);
-    xSpeed += -(0.05 * cos(angle) * totalSpeed);
-    ySpeed += -(0.05 *sin(angle) * totalSpeed);
+    xSpeed -= (0.07 * cos(angle) * totalSpeed);
+    ySpeed -= (0.07 *sin(angle) * totalSpeed);
   }
   
   //updates the speed if this dude is in love with other dudes. targetX and targetY are the x and y coords of the chosen dude that this bot is in love with
@@ -80,8 +108,8 @@ public class dude {
     float deltaX = targetX - x;
     float deltaY = targetY - y;
     float angle = atan2(deltaY, deltaX);
-    xSpeed += 0.05 * cos(angle) * totalSpeed;
-    ySpeed += 0.05 * sin(angle) * totalSpeed;
+    xSpeed += 0.01 * cos(angle) * totalSpeed;
+    ySpeed += 0.01 * sin(angle) * totalSpeed;
   }
   
   //returns the x and y location of the dude as well as the radius.
@@ -95,7 +123,11 @@ public class dude {
   }
   
   void drawDude () {
-    fill(255, 140, 0);
+    if (attractedToDudes) {
+      fill(255, 165, 0);
+    }else {
+      fill(40, 40, 40);
+    }
     circle(x, y, radius * 2);
   }
 }
