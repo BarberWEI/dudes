@@ -97,8 +97,8 @@ public class dude {
     float deltaY = targetY - y;
     float angle = atan2(deltaY, deltaX);
     if (targetRadius > radius) {
-      xSpeed -= (0.09 * cos(angle) * totalSpeed);
-      ySpeed -= (0.09 *sin(angle) * totalSpeed);
+      xSpeed -= (0.1 * cos(angle) * totalSpeed);
+      ySpeed -= (0.1 *sin(angle) * totalSpeed);
     }
   }
   

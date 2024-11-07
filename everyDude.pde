@@ -19,7 +19,7 @@ void setup() {
     //gives scared dudes an advantage to begin with
     if (!attractedToDudes) {
       scaredOfDudes = true; 
-      radius = random(20, 11); 
+      radius = random(11, 20); 
     }else {
       radius = random(5, 15); 
     }
