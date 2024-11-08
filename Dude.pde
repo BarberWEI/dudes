@@ -59,13 +59,13 @@ public class dude {
   void movePlayerBall() {
     keyPressed();
     if (keyCode == 37) {
-      xSpeed -= 0.003;
+      xSpeed -= 0.1;
     }else if (keyCode == 39) {
-      xSpeed += 0.003;
+      xSpeed += 0.1;
     }else if (keyCode == 38) {
-      ySpeed -= 0.003;
+      ySpeed -= 0.1;
     }else if (keyCode == 40) {
-      ySpeed += 0.003;
+      ySpeed += 0.1;
     } 
     keyCode = 0;
   }
