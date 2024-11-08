@@ -67,6 +67,7 @@ public class dude {
     }else if (keyCode == 40) {
       ySpeed += 0.003;
     } 
+    keyCode = 0;
   }
   
   //code for dudes eating other dudes and dudes being eaten by other dudes
