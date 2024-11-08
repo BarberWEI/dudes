@@ -43,7 +43,7 @@ public class dude {
   
   // only runs towards or away when distance is smaller than a certain number
   void closeEnoughToDetect (float distance, float targetX, float targetY, float targetRadius) {
-    if (distance < DETECTION_DISTANCE) {
+    if (distance < DETECTION_DISTANCE + targetRadius + radius) {
       if (scaredOfDudes) {
         updateScared(targetX, targetY, targetRadius);
       }else if (attractedToDudes) {
