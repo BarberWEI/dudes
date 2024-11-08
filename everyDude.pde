@@ -25,7 +25,7 @@ void setup() {
     }
     if (i == dudes.length - 1) {
       print("hi");
-      dudes[i] = new dude(x, y, xSpeed, ySpeed, 15, i, false, false, true);
+      dudes[i] = new dude(x, y, xSpeed, ySpeed, 20, i, false, false, true);
     }else {
       dudes[i] = new dude(x, y, xSpeed, ySpeed, radius, i, attractedToDudes, scaredOfDudes, false);
     }
