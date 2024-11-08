@@ -1,13 +1,18 @@
 public class dude {
-  boolean scaredOfDudes;
-  boolean attractedToDudes;
-  float x, y;
-  float xSpeed, ySpeed;
-  float radius;
-  float totalSpeed;
-  final float maxRadius = 200;
+  private boolean scaredOfDudes;
+  private boolean attractedToDudes;
+  private float x, y;
+  private float xSpeed, ySpeed;
+  public float radius;
+  private float totalSpeed;
+  public int dudeNumber;
+  private static final float MAX_RADIUS = 200;
+  private static final float DETECTION_DISTANCE = 200;
+  private static final float RANDOM_BOUND_LOW = 5000;
+  private static final float RANDOM_BOUND_HIGH = 50000;
+
   
-  public dude (float x, float y, float xSpeed, float ySpeed, float radius, boolean attractedToDudes, boolean scaredOfDudes) {
+  public dude (float x, float y, float xSpeed, float ySpeed, float radius, int amountOfDudes, boolean attractedToDudes, boolean scaredOfDudes) {
     this.x = x;
     this.y = y;
     this.xSpeed = xSpeed;
@@ -16,33 +21,29 @@ public class dude {
     this.attractedToDudes = attractedToDudes;
     this.scaredOfDudes = scaredOfDudes;
     this.totalSpeed = sqrt(sq(xSpeed) + sq(ySpeed));
-  }
-  
-  public dude () {
-    this.x = 350;
-    this.y = 350;
-    this.xSpeed = 10;
-    this.ySpeed = -5;
-    this.radius = 25;
-    this.attractedToDudes = false;
-    this.scaredOfDudes = false;
-    this.totalSpeed = sqrt(sq(xSpeed) + sq(ySpeed));
+    dudeNumber = amountOfDudes;
   }
   
   //targetX and targetY are the x and y coords of another target dude. also gets the radius of the chosen dude so we can tell which one is bigger
-  void update (float targetX, float targetY, float targetRadius) {
-    float distance = sqrt(sq(x - targetX) + sq(y - targetY));
-    //checks to see if the ball is close enough to another ball to detect and move towards or away from it, set to 300
-    closeEnoughToDetect(distance, targetX, targetY, targetRadius);
-    //checks to see if this ball eats someone is is eaten by someone this frame
-    checkEat(distance, targetRadius);
+  void update (dude[] dudes) {
+    for (int i = 0; i < dudes.length; i++) {
+      if (dudes[i] != this) {
+        float[] targetInfo = dudes[i].returnInformation();
+        float targetX = targetInfo[0];
+        float targetY = targetInfo[1];
+        float targetRadius = targetInfo[2];
+        float distance = (float) Math.sqrt(Math.pow(x - targetX, 2) + Math.pow(y - targetY, 2));
+        
+        closeEnoughToDetect(distance, targetX, targetY, targetRadius);
+        checkEat(distance, targetRadius);
+      }
+    }
     updateBounceOffWall();
-    
   }
   
   // only runs towards or away when distance is smaller than a certain number
   void closeEnoughToDetect (float distance, float targetX, float targetY, float targetRadius) {
-    if (distance < 200) {
+    if (distance < DETECTION_DISTANCE) {
       if (scaredOfDudes) {
         updateScared(targetX, targetY, targetRadius);
       }else if (attractedToDudes) {
@@ -50,13 +51,17 @@ public class dude {
       }
     }
   }
+  
   //code for dudes eating other dudes and dudes being eaten by other dudes
   void checkEat (float distance, float targetRadius) {
     if (distance <  targetRadius && radius < targetRadius) {
-      x = random(5000, 50000);
-      y = random(5000, 50000);
+      //teleports dude to random location outside of map
+      x = random(RANDOM_BOUND_LOW, RANDOM_BOUND_HIGH);
+      y = random(RANDOM_BOUND_LOW, RANDOM_BOUND_HIGH);
       xSpeed = 0;
       ySpeed = 0;
+      radius = 0;
+      
     //radius plus 1 because sometimes the timing is broken without the +1 and a ball teleports away before the other one detects it
     }else if (distance <  radius + 5 && radius >= targetRadius) {
       radius += targetRadius; 
@@ -97,8 +102,8 @@ public class dude {
     float deltaY = targetY - y;
     float angle = atan2(deltaY, deltaX);
     if (targetRadius > radius) {
-      xSpeed -= (0.1 * cos(angle) * totalSpeed);
-      ySpeed -= (0.1 *sin(angle) * totalSpeed);
+      xSpeed -= (1.5 * cos(angle) * totalSpeed);
+      ySpeed -= (1.5 * sin(angle) * totalSpeed);
     }
   }
   
@@ -108,18 +113,20 @@ public class dude {
     float deltaY = targetY - y;
     float angle = atan2(deltaY, deltaX);
     if (targetRadius < radius) {
-      xSpeed += 0.01 * cos(angle) * totalSpeed;
-      ySpeed += 0.01 * sin(angle) * totalSpeed;
+      xSpeed += .5 * cos(angle) * totalSpeed;
+      ySpeed += .5 * sin(angle) * totalSpeed;
     }
   }
   
   //returns the x and y location of the dude as well as the radius.
   float[] returnInformation () {
-    float[] information = new float[3];
+    float[] information = new float[4];
     
     information[0] = x;
     information[1] = y;
     information[2] = radius;
+    information[3] = dudeNumber;
+    
     return information;
   }
   
@@ -130,5 +137,7 @@ public class dude {
       fill(40, 40, 40);
     }
     circle(x, y, radius * 2);
+    fill(0, 0, 0);
+    text(dudeNumber, x, y);
   }
 }
