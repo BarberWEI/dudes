@@ -1,18 +1,18 @@
 public class dude {
   private boolean scaredOfDudes;
   private boolean attractedToDudes;
+  private boolean isPlayerDude;
   private float x, y;
   private float xSpeed, ySpeed;
   public float radius;
   private float totalSpeed;
   public int dudeNumber;
-  private static final float MAX_RADIUS = 200;
   private static final float DETECTION_DISTANCE = 200;
   private static final float RANDOM_BOUND_LOW = 5000;
   private static final float RANDOM_BOUND_HIGH = 50000;
-
   
-  public dude (float x, float y, float xSpeed, float ySpeed, float radius, int amountOfDudes, boolean attractedToDudes, boolean scaredOfDudes) {
+  
+  public dude (float x, float y, float xSpeed, float ySpeed, float radius, int amountOfDudes, boolean attractedToDudes, boolean scaredOfDudes, boolean isPlayerDude) {
     this.x = x;
     this.y = y;
     this.xSpeed = xSpeed;
@@ -22,6 +22,7 @@ public class dude {
     this.scaredOfDudes = scaredOfDudes;
     this.totalSpeed = sqrt(sq(xSpeed) + sq(ySpeed));
     dudeNumber = amountOfDudes;
+    this.isPlayerDude = isPlayerDude;
   }
   
   //targetX and targetY are the x and y coords of another target dude. also gets the radius of the chosen dude so we can tell which one is bigger
@@ -48,8 +49,24 @@ public class dude {
         updateScared(targetX, targetY, targetRadius);
       }else if (attractedToDudes) {
         updateLove(targetX, targetY, targetRadius);
+      }else if (isPlayerDude) {
+        movePlayerBall();
       }
     }
+  }
+  
+  //code for player controlled ball
+  void movePlayerBall() {
+    keyPressed();
+    if (keyCode == 37) {
+      xSpeed -= 0.003;
+    }else if (keyCode == 39) {
+      xSpeed += 0.003;
+    }else if (keyCode == 38) {
+      ySpeed -= 0.003;
+    }else if (keyCode == 40) {
+      ySpeed += 0.003;
+    } 
   }
   
   //code for dudes eating other dudes and dudes being eaten by other dudes
@@ -133,9 +150,12 @@ public class dude {
   void drawDude () {
     if (attractedToDudes) {
       fill(255, 165, 0);
-    }else {
+    }else if(scaredOfDudes){
       fill(40, 40, 40);
+    }else if (isPlayerDude){
+      fill(255, 255, 255);
     }
+    
     circle(x, y, radius * 2);
     fill(0, 0, 0);
     text(dudeNumber, x, y);
