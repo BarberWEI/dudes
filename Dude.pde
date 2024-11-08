@@ -7,7 +7,6 @@ public class dude {
   public float radius;
   private float totalSpeed;
   public int dudeNumber;
-  private static final float MAX_SPEED = 2;
   private static final float DETECTION_DISTANCE = 200;
   private static final float RANDOM_BOUND_LOW = 5000;
   private static final float RANDOM_BOUND_HIGH = 50000;
@@ -59,17 +58,15 @@ public class dude {
   //code for player controlled ball
   void movePlayerBall() {
     keyPressed();
-    if (totalSpeed <= MAX_SPEED) {
-      if (keyCode == 37) {
-        xSpeed -= 0.003;
-      }else if (keyCode == 39) {
-        xSpeed += 0.003;
-      }else if (keyCode == 38) {
-        ySpeed -= 0.003;
-      }else if (keyCode == 40) {
-        ySpeed += 0.003;
-      } 
-    }
+    if (keyCode == 37) {
+      xSpeed -= 0.003;
+    }else if (keyCode == 39) {
+      xSpeed += 0.003;
+    }else if (keyCode == 38) {
+      ySpeed -= 0.003;
+    }else if (keyCode == 40) {
+      ySpeed += 0.003;
+    } 
   }
   
   //code for dudes eating other dudes and dudes being eaten by other dudes
